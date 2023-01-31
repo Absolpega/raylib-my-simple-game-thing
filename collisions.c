@@ -71,7 +71,7 @@ void boxes_collision(Player *player) {
 		player_bounce_x();	
 	}
 
-	if(player->rectangle.y <= 0) {
+	if(player->rectangle.y < 0) {
 		player->rectangle.y = 0;
 		player_bounce_y();	
 	} else if(player->rectangle.y > MAP_HEIGHT - player->rectangle.height) {
