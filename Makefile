@@ -1,4 +1,4 @@
-COMPILER = gcc
+COMPILER = x86_64-w64-mingw32-gcc
 
 COMPILER_FLAGS  = -Og -Wall
 
