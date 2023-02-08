@@ -1,6 +1,16 @@
-#include "custom.h"
+#include "common.h"
 
 #include <raylib.h>
+
+#include "main.h"
+
+int debug_y;
+
+#define DEBUG_SPACING 5
+void debug(const char *text) {
+	DrawText(text, GetScreenWidth() - MeasureText(text, 20) - DEBUG_SPACING, debug_y, 20, WHITE);
+	debug_y += 20 + DEBUG_SPACING;
+}
 
 void CustomDrawFPS(int posX, int posY)
 {

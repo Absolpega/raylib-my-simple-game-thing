@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-#include "custom.h"
+#include "common.h"
 
 #include "player.h"
 
@@ -16,6 +16,8 @@
 Font font;
 
 Camera2D camera;
+
+float debug_timer;
 
 float dt = 0.0;
 float scale_x = 1.0;
@@ -53,16 +55,16 @@ int main() {
 }
 
 void update() {
+	debug_timer += dt;
 	player_update();
 }
 
 void draw() {
 	BeginDrawing();
+	debug_y = UI_PADDING;
 	camera_update();
 	BeginMode2D(camera);
 	dt = GetFrameTime();
-	//scale_x = (float)GetScreenWidth()	/ SCREEN_WIDTH;
-	//scale_y = (float)GetScreenHeight()	/ SCREEN_HEIGHT;
 
 	ClearBackground(BLACK);
 	DrawRectangle(0,0,MAP_WIDTH, MAP_HEIGHT, (Color) {20,20,20,255});
@@ -70,8 +72,16 @@ void draw() {
 
 	EndMode2D();
 	
-	CustomDrawFPS(GetScreenWidth() - UI_PADDING - MeasureText(TextFormat("%2i", GetFPS()), 20), 0 + UI_PADDING);
-	
+	CustomDrawFPS(GetScreenWidth() - UI_PADDING - MeasureText(TextFormat("%2i", GetFPS()), 20), debug_y);
+	debug_y += 20 + UI_PADDING;
+
+#define DEBUG_TIMER_RESET 0.1
+	if(debug_timer >= DEBUG_TIMER_RESET) {
+		debug_timer = 0;
+		player.debug_speed = player.speed;
+	}
+	player_debug();
+
 #define CURSOR_RADIUS 3
 	if(IsCursorOnScreen())
 		DrawCircle(GetMouseX(), GetMouseY(), CURSOR_RADIUS, LIGHTGRAY);

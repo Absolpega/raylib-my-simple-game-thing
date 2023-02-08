@@ -8,6 +8,8 @@
 
 #include "main.h"
 
+#include "common.h"
+
 #define PLAYER_WIDTH 64
 #define PLAYER_HEIGHT 64
 
@@ -32,6 +34,13 @@ Directions animation;
 
 Player player;
 
+//#define DEBUG
+
+void player_debug() {
+	debug(TextFormat("%f", player.debug_speed.x));
+	debug(TextFormat("%f", player.debug_speed.y));
+}
+
 void player_load() {
 	player.rectangle.x = PLAYER_SPAWN_X;
 	player.rectangle.y = PLAYER_SPAWN_Y;
@@ -45,7 +54,7 @@ void player_load() {
 	player.accel = PLAYER_ACCEL;
 }
 
-#define LOW_SPEED_THRESHOLD 5
+#define LOW_SPEED_THRESHOLD 15
 
 bool return_if_low_speed() {
 	if(

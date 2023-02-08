@@ -15,7 +15,9 @@ typedef struct {
 
 typedef struct {
 	float accel;
+	bool standing;
 	Vector2 speed;
+	Vector2 debug_speed;
 	Rectangle rectangle;
 } Player;
 
@@ -28,6 +30,8 @@ enum direction {
 };
 
 extern Player player;
+
+void player_debug();
 
 void player_load();
 
