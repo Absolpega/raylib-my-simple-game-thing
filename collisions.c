@@ -4,10 +4,12 @@
 
 #include "player.h"
 
+#include "colors.h"
+
 Rectangle boxes[] = {
 	{
 		200,
-		300,
+		MAP_HEIGHT - 300,
 		50,
 		60,
 	},
@@ -35,7 +37,7 @@ int boxes_lenght = sizeof(boxes)/sizeof(boxes[0]);
 
 void boxes_render() {
 	for(int i = 0; i < boxes_lenght; i++) {
-		DrawRectangle(boxes[i].x, boxes[i].y, boxes[i].width, boxes[i].height, (Color) {200,200,200,255});
+		DrawRectangle(boxes[i].x, boxes[i].y, boxes[i].width, boxes[i].height, COLOR_BOXES);
 	}
 }
 
@@ -45,7 +47,8 @@ enum direction get_collided_side_of_rectangle(Player *player, Rectangle *rectang
 
 	if(result.width > result.height) {
 		// down or up
-		if(player->rectangle.y < rectangle->y) {
+#define COLLSION_MARGIN_TOP 0
+		if(player->rectangle.y < rectangle->y + COLLSION_MARGIN_TOP) {
 			return up;
 		} else {
 			return down;
@@ -62,27 +65,30 @@ enum direction get_collided_side_of_rectangle(Player *player, Rectangle *rectang
 	return nodirection;
 }
 
-void boxes_collision(Player *player) {
+bool boxes_collision(Player *player) {
 	if(player->rectangle.x < 0) {
 		player->rectangle.x = 0;
-		player_bounce_x();	
+		player_bounce_x();
 	} else if(player->rectangle.x > MAP_WIDTH - player->rectangle.width) {
 		player->rectangle.x = MAP_WIDTH - player->rectangle.width;
-		player_bounce_x();	
+		player_bounce_x();
 	}
 
 	if(player->rectangle.y < 0) {
 		player->rectangle.y = 0;
 		player_bounce_y();	
-	} else if(player->rectangle.y > MAP_HEIGHT - player->rectangle.height) {
-		player->rectangle.y = MAP_HEIGHT - player->rectangle.height;
+	} else if(player->rectangle.y >= MAP_HEIGHT - player->rectangle.height) {
+		player->rectangle.y = MAP_HEIGHT - player->rectangle.height + 1;
 		player_bounce_y();	
+		return true;
 	}
+
 	for(int i = 0; i < boxes_lenght; i++) {
 		switch(get_collided_side_of_rectangle(player, &boxes[i])) {
 			case up:
-				player->rectangle.y = boxes[i].y - player->rectangle.height;
+				player->rectangle.y = boxes[i].y - player->rectangle.height + 1;
 				player_bounce_y();
+				return true;
 				break;
 			case down:
 				player->rectangle.y = boxes[i].y + boxes[i].height;
@@ -100,4 +106,5 @@ void boxes_collision(Player *player) {
 				break;
 		}
 	}
+	return false;
 }

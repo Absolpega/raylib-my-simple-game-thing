@@ -8,6 +8,10 @@
 
 #include "collisions.h"
 
+#include "colors.h"
+
+#include "timers.h"
+
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 
@@ -17,8 +21,6 @@ Font font;
 
 Camera2D camera;
 
-float debug_timer;
-
 float dt = 0.0;
 float scale_x = 1.0;
 float scale_y = 1.0;
@@ -26,8 +28,8 @@ float scale_y = 1.0;
 void camera_update() {
 	camera.offset.x	= (float)GetScreenWidth()/2;
 	camera.offset.y	= (float)GetScreenHeight()/2;
-	camera.target.x	= player.rectangle.x;
-	camera.target.y	= player.rectangle.y;
+	camera.target.x	= player.rectangle.x + player.rectangle.width/2;
+	camera.target.y	= player.rectangle.y + player.rectangle.height/2;
 }
 
 int main() {
@@ -55,8 +57,8 @@ int main() {
 }
 
 void update() {
-	debug_timer += dt;
 	player_update();
+	timers_update();
 }
 
 void draw() {
@@ -67,7 +69,8 @@ void draw() {
 	dt = GetFrameTime();
 
 	ClearBackground(BLACK);
-	DrawRectangle(0,0,MAP_WIDTH, MAP_HEIGHT, (Color) {20,20,20,255});
+	//DrawRectangle(0,0,MAP_WIDTH, MAP_HEIGHT, COLOR_SKY);
+	DrawRectangleGradientV(0,0,MAP_WIDTH, MAP_HEIGHT, COLOR_SKY_UPPER, COLOR_SKY_LOWER);
 	player_draw(scale_x, scale_y);
 
 	EndMode2D();
@@ -75,11 +78,7 @@ void draw() {
 	CustomDrawFPS(GetScreenWidth() - UI_PADDING - MeasureText(TextFormat("%2i", GetFPS()), 20), debug_y);
 	debug_y += 20 + UI_PADDING;
 
-#define DEBUG_TIMER_RESET 0.1
-	if(debug_timer >= DEBUG_TIMER_RESET) {
-		debug_timer = 0;
-		player.debug_speed = player.speed;
-	}
+
 	player_debug();
 
 #define CURSOR_RADIUS 3

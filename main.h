@@ -5,6 +5,8 @@
 
 extern float dt;
 
+extern Camera2D camera;
+
 extern Font font;
 
 void update();

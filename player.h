@@ -16,6 +16,7 @@ typedef struct {
 typedef struct {
 	float accel;
 	bool standing;
+	bool in_slowdown;
 	Vector2 speed;
 	Vector2 debug_speed;
 	Rectangle rectangle;
